@@ -14,7 +14,7 @@ import {
   Button,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { styles } from './RegistrationStyles';
+import { styles } from './RegistrationScreenStyle';
 
 const initialState = {
   login: '',

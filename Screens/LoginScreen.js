@@ -13,7 +13,7 @@ import {
   ImageBackground,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { styles } from './LoginScreenStyles';
+import { styles } from './LoginScreenStyle';
 
 const initialState = {
   email: '',

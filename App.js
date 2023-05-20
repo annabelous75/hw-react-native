@@ -9,7 +9,7 @@ import {
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 
-import RegistrationScreen from './Screens/RegistarationScreen';
+import RegistrationScreen from './Screens/RegistrationScreen';
 import LoginScreen from './Screens/LoginScreen';
 
 SplashScreen.preventAutoHideAsync();
