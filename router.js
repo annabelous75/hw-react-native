@@ -3,13 +3,13 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 const AuthStack = createStackNavigator();
-const MainTab = createBottomTabNavigator();
+const MainTab = createStackNavigator();
 
 import RegistrationScreen from './screens/auth/RegistarationScreen';
 import LoginScreen from './screens/auth/LoginScreen';
-import PostScreen from './screens/mainScreen/PostScreen';
-import CreateScreen from './screens/mainScreen/CreateScreen';
-import ProfileScreen from './screens/mainScreen/ProfileScreen ';
+import Home from './screens/mainScreen/Home';
+import CommentsScreen from './screens/mainScreen/CommentsScreen';
+import MapScreen from './screens/mainScreen/MapScreen';
 
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -33,38 +33,19 @@ export const useRoute = isAuth => {
   return (
     <MainTab.Navigator screenOptions={{ tabBarShowLabel: false }}>
       <MainTab.Screen
-        options={{
-          headerShown: false,
-          tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons
-              name="post-outline"
-              color={color}
-              size={size}
-            />
-          ),
-        }}
-        name="Posts"
-        component={PostScreen}
+        options={{ headerShown: false }}
+        name="Home"
+        component={Home}
       ></MainTab.Screen>
       <MainTab.Screen
-        options={{
-          headerShown: false,
-          tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="plus" color={color} size={size} />
-          ),
-        }}
-        name="Create"
-        component={CreateScreen}
+        options={{ headerShown: false }}
+        name="Comment"
+        component={CommentsScreen}
       ></MainTab.Screen>
       <MainTab.Screen
-        options={{
-          headerShown: false,
-          tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="account" color={color} size={size} />
-          ),
-        }}
-        name="Profile"
-        component={ProfileScreen}
+        options={{ headerShown: false }}
+        name="Map"
+        component={MapScreen}
       ></MainTab.Screen>
     </MainTab.Navigator>
   );

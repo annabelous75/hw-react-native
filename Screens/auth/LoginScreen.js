@@ -8,7 +8,6 @@ import {
   Platform,
   KeyboardAvoidingView,
   Pressable,
-  Button,
   TouchableWithoutFeedback,
   ImageBackground,
 } from 'react-native';

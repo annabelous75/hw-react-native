@@ -1,10 +1,21 @@
 import React from 'react';
-import { Text, View, StyleSheet } from 'react-native';
+import { Text, View, StyleSheet, Image } from 'react-native';
 
 const PostScreen = () => {
   return (
     <View style={styles.container}>
-      <Text>PostScreen</Text>
+      <View style={styles.userWrapper}>
+        <Image
+          alt={'user'}
+          source={require('../../assets/img/User.png')}
+          width={60}
+          height={60}
+        />
+        <View style={styles.infoWrapper}>
+          <Text style={{ fontFamily: 'Roboto-Bold' }}>Natali Romanova</Text>
+          <Text>email@example.com</Text>
+        </View>
+      </View>
     </View>
   );
 };
@@ -12,8 +23,19 @@ const PostScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingTop: 32,
+    paddingRight: 16,
+    paddingLeft: 16,
+    backgroundColor: '#fff',
+  },
+  userWrapper: {
+    display: 'flex',
+    flexDirection: 'row',
+  },
+  infoWrapper: {
+    marginLeft: 8,
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'flex-start',
   },
 });
 
