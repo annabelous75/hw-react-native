@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import firebase from 'firebase/app';
+import 'firebase/auth';
+import React, { useState, useEffect} from 'react';
 import {
   View,
   TextInput,
@@ -12,6 +14,8 @@ import {
   ImageBackground,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { useDispatch } from 'react-redux';
+import { authSignUpUser } from '../../../redux/auth/authOperations';
 import { styles } from '../LoginScreenStyle';
 
 const initialState = {
@@ -29,16 +33,49 @@ export default function LoginScreen({ navigation }) {
   const [passwordVisibility, setPasswordVisibility] = useState(true);
   const [focusedState, setFocusedState] = useState(false);
 
-  const keyboardHide = () => {
+  const dispatch = useDispatch();
+  
+  useEffect(() => {
+    const checkAuthStatus = async () => {
+      try {
+        const user = await firebase.auth().currentUser;
+        if (user) {
+          navigation.navigate('PostsScreen');
+        }
+      } catch (error) {
+        console.log('Ошибка проверки аутентификации:', error);
+      }
+    };
+
+    checkAuthStatus();
+  }, []);
+  const handleSubmit = async () => {
     if (state.email === '' || state.password === '') {
       console.log('Please fill in all fields...');
       return;
     }
-    setState(initialState);
-    console.log(state);
+    
+    setIsShowKeyboard(false);
     Keyboard.dismiss();
-  };
 
+    try {
+      const userCredential = await firebase.auth().signInWithEmailAndPassword(
+        state.email,
+        state.password
+      );
+      const user = userCredential.user;
+      
+      dispatch(authSignUpUser({
+        id: user.uid,
+        email: user.email,
+        displayName: user.displayName
+      }));
+
+      setState(initialState);
+    } catch (error) {
+      console.log('Ошибка входа', error.message);
+    }
+  };
   const handlePasswordVisibility = () => {
     if (passwordVisibility) {
       setPasswordVisibility(false);
@@ -120,7 +157,7 @@ export default function LoginScreen({ navigation }) {
               <TouchableOpacity
                 activeOpacity={0.8}
                 style={styles.btn}
-                onPress={keyboardHide}
+                onPress={handleSubmit}
               >
                 <Text style={styles.btnTitle}>Войти</Text>
               </TouchableOpacity>

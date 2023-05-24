@@ -1,3 +1,5 @@
+import firebase from 'firebase/app';
+import 'firebase/auth';
 import React, { useState } from 'react';
 import {
   View,
@@ -11,9 +13,10 @@ import {
   Pressable,
   TouchableWithoutFeedback,
   ImageBackground,
-  Button,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { useDispatch } from 'react-redux';
+import { authSignUpUser } from '../../../redux/auth/authOperations';
 import { styles } from './RegistrationScreenStyle';
 
 const initialState = {
@@ -25,7 +28,7 @@ const initialState = {
 const Show = <Icon name="eye" size={20} color="#BDBDBD" />;
 const Hide = <Icon name="eye-slash" size={20} color="#BDBDBD" />;
 
-export default function RegistarationScreen({ navigation }) {
+export default function RegistrationScreen({ navigation }) {
   const [state, setState] = useState(initialState);
   const [loginFocused, setLoginFocused] = useState(false);
   const [emailFocused, setEmailFocused] = useState(false);
@@ -33,33 +36,42 @@ export default function RegistarationScreen({ navigation }) {
   const [passwordVisibility, setPasswordVisibility] = useState(true);
   const [focusedState, setFocusedState] = useState(false);
 
-  const keyboardHide = () => {
-    if (state.login === '' || state.email === '' || state.password === '') {
-      console.log('Please fill in all fields...');
-      return;
-    }
-    setState(initialState);
-    console.log(state);
+  const dispatch = useDispatch();
+
+  const handleSubmit = async () => {
+    setIsShowKeyboard(false);
     Keyboard.dismiss();
+
+    try {
+      const userCredential = await firebase.auth().createUserWithEmailAndPassword(
+        state.email,
+        state.password
+      );
+      const user = userCredential.user;
+      
+      await user.updateUserProfile({
+        displayName: state.login
+      });
+
+      dispatch(authSignUpUser({
+        id: user.uid,
+        login: state.login,
+        email: state.email,
+        displayName: user.displayName
+      }));
+
+      setState(initialState);
+    } catch (error) {
+      console.log('Ошибка регистрации:', error.message);
+    }
   };
 
-  const handlePasswordVisibility = () => {
-    if (passwordVisibility) {
-      setPasswordVisibility(false);
-      return;
-    }
-    setPasswordVisibility(true);
-  };
+
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <ImageBackground
         style={styles.image}
-        // style={{
-        //   ...styles.image,
-        //   height: dimensionsHeigth,
-        //   width: Dimensions.get('window').width,
-        // }}
         source={require('../../assets/img/wallpaper.jpg')}
       >
         <View
@@ -68,7 +80,8 @@ export default function RegistarationScreen({ navigation }) {
             marginTop: focusedState ? 160 : 0,
           }}
         >
-          <KeyboardAvoidingView
+          <KeyboardAvoidingView 
+
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           >
             <View style={styles.form}>
@@ -147,7 +160,7 @@ export default function RegistarationScreen({ navigation }) {
               <TouchableOpacity
                 activeOpacity={0.8}
                 style={styles.btn}
-                onPress={keyboardHide}
+                onPress={handleSubmit}
               >
                 <Text style={styles.btnTitle}>Зарегистрироваться</Text>
               </TouchableOpacity>
